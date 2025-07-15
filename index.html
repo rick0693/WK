@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quem Somos - Gerador de negócios WK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Link para o arquivo CSS externo do sidebar -->
+    <link rel="stylesheet" href="sidebar.css">
+    <style>
+        :root {
+            --wk-dark-blue: #001f5a;
+            --wk-vibrant-blue: #0047bb;
+            --wk-light-blue: #e6f0ff;
+            --wk-text-primary: #001f5a;
+            --wk-text-secondary: #5a6a8a;
+            --bg-main: #f8f9fa;
+            --bg-panel: #ffffff;
+            --border-color: #dee2e6;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--wk-text-primary);
+        }
+        .card {
+            background-color: var(--bg-panel);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 31, 90, 0.08);
+            border: 1px solid var(--border-color);
+        }
+        .nav-link:hover {
+            background-color: var(--wk-light-blue);
+            color: var(--wk-vibrant-blue);
+        }
+        .nav-link.active {
+            color: var(--wk-vibrant-blue);
+            background-color: var(--wk-light-blue);
+            border-left-color: var(--wk-vibrant-blue);
+        }
+        .content-animation {
+            animation: fadeInUp 0.6s ease-in-out;
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    
+    <div class="p-4 sm:p-6 lg:p-8 max-w-full mx-auto">
+        
+        <header class="mb-8 p-6 rounded-xl text-white flex items-center justify-between" style="background: linear-gradient(90deg, var(--wk-dark-blue) 0%, var(--wk-vibrant-blue) 100%);">
+            <div class="flex items-center gap-4">
+                <div>
+                    <h1 class="text-3xl font-bold">Gerador de negócios WK</h1>
+                </div>
+            </div>
+            <img src="https://grupo-wk.com/wp-content/uploads/2024/10/Logo-Grupo-WG-03-1024x1024.png" alt="Logo WK" class="h-16" onerror="this.onerror=null;this.src='https://grupo-wk.com/wp-content/uploads/2023/08/logo-wk.png';">
+        </header>
+
+        <div id="main-container" class="main-container flex flex-row gap-6 transition-all duration-500 ease-in-out">
+            
+            <aside id="sidebar" class="flex-shrink-0 transition-all duration-300 ease-in-out collapsed">
+                <nav class="bg-white p-4 rounded-xl shadow-lg h-full flex flex-col" aria-label="Navegação Principal">
+                    <div class="logo-container mb-8 flex justify-center">
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <a href="index.html" class="nav-link" data-page="index"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span class="link-text">Quem Somos</span></a>
+                        <a href="consorcio-pratica.html" class="nav-link" data-page="consorcio-pratica"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="link-text">Consórcio na Prática</span></a>
+                        <a href="modalidades.html" class="nav-link" data-page="modalidades"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg><span class="link-text">Modalidades</span></a>
+                        <a href="financiamento.html" class="nav-link" data-page="financiamento"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg><span class="link-text">Financiamento</span></a>
+                        <a href="consorcio.html" class="nav-link" data-page="consorcio"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg><span class="link-text">Consórcio</span></a>
+                        <a href="jornada.html" class="nav-link" data-page="jornada"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-1.447-.894L15 7m-6 13v-5.5m0 0l6-3m-6 3l-6-3"></path></svg><span class="link-text">Jornada Patrimônio</span></a>
+                        <a href="piramide.html" class="nav-link" data-page="piramide"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg><span class="link-text">Pirâmide Contemplação</span></a>
+                        <a href="simulador.xlsx" target="_blank" class="nav-link" data-page="simulador"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-4 4h4m2 0h-2m-4 4h4m2 0h-2m-4-8v8m-4-4h.01M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"></path></svg><span class="link-text">Simulador</span></a>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="flex-1 min-w-0">
+                <main class="bg-panel p-6 sm:p-8 rounded-xl shadow-lg min-h-[600px] content-animation">
+                    <h2 class="text-4xl font-bold text-center mb-8">Nossa História</h2>
+                    <div class="text-left text-gray-700 space-y-5 max-w-3xl mx-auto text-lg leading-relaxed">
+                        <p>A história do Grupo WK começa no Rio de Janeiro, quando o Sr. Otoniel Ferreira Leite, em 1960, dá o primeiro passo rumo ao novo e ingressa no mercado de seguros.</p>
+                        <p>Aos 18 anos, inspirado pelo pioneirismo do pai, Wellington Leite inicia sua trajetória de sucesso e, em 2003, traz todo o seu conhecimento para o Espírito Santo, criando raízes profundas em terras capixabas.</p>
+                        <p>Reconhecida por sua excelência e idoneidade, a então Prudência Máxima expande seus horizontes e se torna o Grupo WK, especialista e líder no ramo de seguros e consórcios. Um marco de sua trajetória é a confiança conquistada ao longo de décadas, a ponto de atender clientes que já estão na terceira geração – avós, pais e netos –, consolidando um legado de credibilidade e proximidade. Ao oferecer aos seus clientes e parceiros uma estrutura sólida, portfólio diversificado e consultoria experiente, o Grupo WK se mantém em constante ascensão e solidez.</p>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.addEventListener('mouseenter', () => sidebar.classList.remove('collapsed'));
+                sidebar.addEventListener('mouseleave', () => sidebar.classList.add('collapsed'));
+            }
+
+            // Script para marcar o link ativo da página atual
+            const currentPage = 'index'; // Define a página atual
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                if (link.getAttribute('data-page') === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

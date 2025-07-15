@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modalidades - Gerador de negócios WK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Link para o arquivo CSS padrão do sidebar -->
+    <link rel="stylesheet" href="sidebar.css">
+
+    <!-- Estilos específicos para a página de Modalidades -->
+    <style>
+        .card {
+            background-color: var(--bg-panel);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0, 31, 90, 0.08);
+            border: 1px solid var(--border-color);
+        }
+        .sub-tab-button {
+            padding: 0.75rem 0.5rem;
+            margin-right: 1.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            color: var(--wk-text-secondary);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease-in-out;
+        }
+        .sub-tab-button:hover {
+            color: var(--wk-text-primary);
+        }
+        .sub-tab-button.active {
+            color: var(--wk-vibrant-blue);
+            border-bottom-color: var(--wk-vibrant-blue);
+        }
+        .sub-tab-content { 
+            display: none; 
+            padding-top: 1.5rem; 
+        }
+        .sub-tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    
+    <div class="p-4 sm:p-6 lg:p-8 max-w-full mx-auto">
+        
+        <header class="mb-8 p-6 rounded-xl text-white flex items-center justify-between" style="background: linear-gradient(90deg, var(--wk-dark-blue) 0%, var(--wk-vibrant-blue) 100%);">
+            <div class="flex items-center gap-4">
+                <div>
+                    <h1 class="text-4xl font-bold">Modalidades de Aquisição</h1>
+                </div>
+            </div>
+            <img src="https://grupo-wk.com/wp-content/uploads/2024/10/Logo-Grupo-WG-03-1024x1024.png" alt="Logo WK" class="h-24" onerror="this.onerror=null;this.src='https://placehold.co/180x96/001f5a/ffffff?text=WK+Logo';">
+        </header>
+
+        <div id="main-container" class="main-container">
+            
+            <aside id="sidebar" class="collapsed">
+                <nav>
+                    <div class="logo-container">
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <a href="index.html" class="nav-link" data-page="index"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span class="link-text">Quem Somos</span></a>
+                        <a href="consorcio-pratica.html" class="nav-link" data-page="consorcio-pratica"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="link-text">Consórcio na Prática</span></a>
+                        <a href="modalidades.html" class="nav-link" data-page="modalidades"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg><span class="link-text">Modalidades</span></a>
+                        <a href="financiamento.html" class="nav-link" data-page="financiamento"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg><span class="link-text">Financiamento</span></a>
+                        <a href="consorcio.html" class="nav-link" data-page="consorcio"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg><span class="link-text">Consórcio</span></a>
+                        <a href="jornada.html" class="nav-link" data-page="jornada"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-1.447-.894L15 7m-6 13v-5.5m0 0l6-3m-6 3l-6-3"></path></svg><span class="link-text">Jornada Patrimônio</span></a>
+                        <a href="piramide.html" class="nav-link" data-page="piramide"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg><span class="link-text">Pirâmide Contemplação</span></a>
+                        <a href="simulador.xlsx" target="_blank" class="nav-link" data-page="simulador"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-4 4h4m2 0h-2m-4 4h4m2 0h-2m-4-8v8m-4-4h.01M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"></path></svg><span class="link-text">Simulador</span></a>
+                    </div>
+                </nav>
+            </aside>
+
+            <main>
+                <div class="main-content-panel content-animation">
+                    <h2 class="text-4xl font-bold text-center mb-8">Modalidades de Aquisição</h2>
+                    <div class="border-b border-gray-200">
+                        <nav class="-mb-px flex" aria-label="Sub-Tabs">
+                            <button class="sub-tab-button active" data-sub-tab="avista">À Vista</button>
+                            <button class="sub-tab-button" data-sub-tab="financiamento-sub">Financiamento</button>
+                            <button class="sub-tab-button" data-sub-tab="consorcio-sub">Consórcio</button>
+                        </nav>
+                    </div>
+                    <div class="mt-8">
+                        <div id="sub-tab-avista" class="sub-tab-content active">
+                            <div class="p-6 rounded-lg bg-red-50 border border-red-200">
+                                <div class="flex items-start">
+                                    <div class="text-4xl mr-5 mt-1">📉</div>
+                                    <div>
+                                        <h4 class="font-bold text-xl text-red-800">O Risco da Descapitalização Total</h4>
+                                        <p class="text-red-700 mt-2 text-lg">Pagar à vista parece vantajoso, mas imobiliza seu capital em um único ativo, gerando riscos e perdas que superam a pequena economia de juros.</p>
+                                    </div>
+                                </div>
+                                <ul class="mt-4 ml-5 space-y-3 list-disc text-red-700 text-base">
+                                    <li><b>Perda de Liquidez:</b> Você fica sem reserva de emergência para imprevistos ou para aproveitar outras oportunidades de investimento que possam surgir.</li>
+                                    <li><b>Custo de Oportunidade Elevado:</b> O dinheiro investido no imóvel poderia estar rendendo juros em aplicações financeiras, gerando uma nova fonte de renda passiva.</li>
+                                    <li><b>Risco Concentrado:</b> Todo o seu patrimônio fica vulnerável às flutuações e riscos de um único mercado, o imobiliário.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="sub-tab-financiamento-sub" class="sub-tab-content">
+                            <div class="p-6 rounded-lg bg-red-50 border border-red-200">
+                                <div class="flex items-start">
+                                    <div class="text-4xl mr-5 mt-1">⛓️</div>
+                                    <div>
+                                        <h4 class="font-bold text-xl text-red-800">A Dívida que Consome seu Futuro</h4>
+                                        <p class="text-red-700 mt-2 text-lg">O financiamento é a forma mais cara de adquirir um bem. Os juros compostos transformam o sonho em um pesadelo financeiro que pode durar décadas.</p>
+                                    </div>
+                                </div>
+                                <ul class="mt-4 ml-5 space-y-3 list-disc text-red-700 text-base">
+                                    <li><b>Custo Exorbitante:</b> Você paga de 3 a 4 vezes o valor do bem, enriquecendo o banco em vez de construir seu próprio patrimônio.</li>
+                                    <li><b>Propriedade Ilusória:</b> O imóvel não é seu até a quitação da última parcela. Ele pertence ao banco e serve como garantia, com risco de perda.</li>
+                                    <li><b>Comprometimento da Renda:</b> Parcelas altas sufocam seu orçamento, limitando seu padrão de vida e a capacidade de fazer novos investimentos.</li>
+                                    <li><b>Burocracia e Insegurança:</b> Processo lento, complexo e sujeito a variações de taxas (como IPCA) que podem aumentar drasticamente o valor das parcelas.</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div id="sub-tab-consorcio-sub" class="sub-tab-content">
+                            <div class="p-6 rounded-lg bg-green-50 border border-green-200">
+                                <div class="flex items-start">
+                                    <div class="text-4xl mr-5 mt-1">🚀</div>
+                                    <div>
+                                        <h4 class="font-bold text-xl text-green-800">Construção de Patrimônio com Inteligência</h4>
+                                        <p class="text-green-700 mt-2 text-lg">O consórcio é uma ferramenta de autofinanciamento planejado que permite alavancar seu capital sem pagar juros, transformando disciplina em riqueza.</p>
+                                    </div>
+                                </div>
+                                <ul class="mt-4 ml-5 space-y-3 list-disc text-green-700 text-base">
+                                    <li><b>Economia Máxima:</b> Custo final drasticamente inferior, sem a cobrança de juros, apenas uma taxa de administração diluída ao longo do plano.</li>
+                                    <li><b>Poder de Compra à Vista:</b> Ao ser contemplado, você tem o valor integral da carta para negociar os melhores descontos na aquisição do seu bem.</li>
+                                    <li><b>Flexibilidade Total:</b> Use a carta de crédito para comprar, construir, reformar, quitar um financiamento ou até mesmo investir o valor, se permitido pelo grupo.</li>
+                                    <li><b>Proteção Contra a Inflação:</b> O valor da sua carta de crédito é atualizado periodicamente, garantindo que seu poder de compra seja mantido até a contemplação.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Script para o Toggle da Sidebar com MOUSE HOVER
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.addEventListener('mouseenter', () => sidebar.classList.remove('collapsed'));
+                sidebar.addEventListener('mouseleave', () => sidebar.classList.add('collapsed'));
+            }
+
+            // Script para marcar o link ativo da página atual
+            const currentPage = 'modalidades';
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                const page = link.getAttribute('data-page');
+                if (page === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+
+            // Script para as Sub-Abas
+            const subTabs = document.querySelectorAll('.sub-tab-button');
+            const subTabContents = document.querySelectorAll('.sub-tab-content');
+            subTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.getAttribute('data-sub-tab');
+                    
+                    subTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    subTabContents.forEach(c => c.classList.remove('active'));
+                    document.getElementById(`sub-tab-${target}`).classList.add('active');
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

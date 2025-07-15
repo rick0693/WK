@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirâmide de Contemplação - WK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --wk-dark-blue: #001f5a;
+            --wk-vibrant-blue: #0047bb;
+            --wk-light-blue: #e6f0ff;
+            --wk-text-primary: #001f5a;
+            --wk-text-secondary: #5a6a8a;
+            --bg-main: #f8f9fa;
+            --bg-panel: #ffffff;
+            --border-color: #dee2e6;
+        }
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--wk-text-primary);
+            overflow-x: hidden;
+        }
+        
+        /* --- Estilos do Sidebar Principal (Esquerda) --- */
+        #main-sidebar { width: 90px; }
+        #main-sidebar:not(.collapsed) { width: 280px; }
+        #main-sidebar .link-text { opacity: 0; transition: opacity 0.2s ease-in-out; }
+        #main-sidebar:not(.collapsed) .link-text { opacity: 1; }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            color: var(--wk-text-secondary);
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover { background-color: #e9ecef; color: var(--wk-vibrant-blue); }
+        .nav-link.active { background-color: var(--wk-light-blue); color: var(--wk-vibrant-blue); }
+
+        /* --- Estilos da Pirâmide (INTOCADO) --- */
+        .pyramid-graphic-container { position: relative; width: 100%; max-width: 450px; height: 480px; flex-shrink: 0; }
+        
+        .pyramid-shape-6-level {
+            width: 100%; height: 100%;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            background-image: linear-gradient(to bottom,
+                #DC2626 0%, #DC2626 16.66%, #F97316 16.66%, #F97316 33.33%,
+                #F59E0B 33.33%, #F59E0B 50%, #10B981 50%, #10B981 66.66%,
+                #0EA5E9 66.66%, #0EA5E9 83.33%, #3B82F6 83.33%, #3B82F6 100%);
+        }
+
+        .pyramid-shape-3-level {
+            width: 100%; height: 100%;
+            clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+            background-image: linear-gradient(to bottom, #DC2626 0%, #DC2626 33.33%, #0EA5E9 33.33%, #0EA5E9 66.66%, #3B82F6 66.66%, #3B82F6 100%);
+        }
+        .pyramid-text {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            color: white; font-weight: 800; text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            text-align: center; padding: 0 0.5rem; box-sizing: border-box;
+            font-size: 1.1rem;
+        }
+
+        /* --- Estilos das Abas (Discretas) --- */
+        .tab-button {
+            padding: 0.5rem 1rem; font-size: 0.9rem; font-weight: 600;
+            border-radius: 0.5rem; cursor: pointer; transition: all 0.3s ease;
+            border: 2px solid transparent; color: var(--wk-text-secondary);
+        }
+        .tab-button.active {
+            color: var(--wk-vibrant-blue); background-color: var(--wk-light-blue);
+            border-color: var(--wk-vibrant-blue);
+        }
+        .tab-button:not(.active):hover { background-color: #e9ecef; }
+        
+        .view-container {
+             animation: fadeInUp 0.5s ease-in-out;
+        }
+
+        .toggle-checkbox:checked { right: 0; border-color: var(--wk-vibrant-blue); }
+        .toggle-checkbox:checked + .toggle-label { background-color: var(--wk-vibrant-blue); }
+
+        /* --- Estilos da Transição Promocional (INTOCADO) --- */
+        .content-wrapper { display: flex; align-items: center; transition: transform 0.5s ease-in-out; }
+        .main-content { flex-grow: 1; transition: all 0.5s ease-in-out; }
+        .promo-details {
+            flex: 0 0 0px; opacity: 0; visibility: hidden;
+            transition: all 0.5s ease-in-out; transform: translateX(20px);
+        }
+        .tab-content.promo-active .content-wrapper { transform: translateX(-150px); }
+        .tab-content.promo-active .promo-details {
+            flex: 0 0 300px; opacity: 1; visibility: visible; transform: translateX(0);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    
+    <div class="p-4 sm:p-6 lg:p-8 max-w-full mx-auto">
+        
+        <header class="mb-8 p-6 rounded-xl text-white flex items-center justify-between" style="background: linear-gradient(90deg, var(--wk-dark-blue) 0%, var(--wk-vibrant-blue) 100%);">
+            <div class="flex items-center gap-4">
+                <div>
+                    <h1 class="text-4xl font-bold">Gerador de negócios WK</h1>
+                </div>
+            </div>
+            <img src="https://grupo-wk.com/wp-content/uploads/2024/10/Logo-Grupo-WG-03-1024x1024.png" alt="Logo WK" class="h-24" onerror="this.onerror=null;this.src='https://placehold.co/180x96/001f5a/ffffff?text=WK+Logo';">
+        </header>
+
+        <div class="flex flex-row gap-6">
+            <!-- SIDEBAR PRINCIPAL (RESTAURADO COM TODOS OS LINKS) -->
+            <aside id="main-sidebar" class="flex-shrink-0 transition-all duration-300 ease-in-out collapsed bg-white p-4 rounded-xl shadow-lg h-full flex flex-col">
+                <nav class="flex-grow" aria-label="Navegação Principal">
+                    <div class="flex flex-col space-y-2">
+                        <a href="index.html" class="nav-link" data-page="index"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span class="link-text">Quem Somos</span></a>
+                        <a href="consorcio-pratica.html" class="nav-link" data-page="consorcio-pratica"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="link-text">Consórcio na Prática</span></a>
+                        <a href="modalidades.html" class="nav-link" data-page="modalidades"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg><span class="link-text">Modalidades</span></a>
+                        <a href="financiamento.html" class="nav-link" data-page="financiamento"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg><span class="link-text">Financiamento</span></a>
+                        <a href="consorcio.html" class="nav-link" data-page="consorcio"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg><span class="link-text">Consórcio</span></a>
+                        <a href="jornada.html" class="nav-link" data-page="jornada"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-1.447-.894L15 7m-6 13v-5.5m0 0l6-3m-6 3l-6-3"></path></svg><span class="link-text">Jornada Patrimônio</span></a>
+                        <a href="piramide.html" class="nav-link active" data-page="piramide"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg><span class="link-text">Pirâmide Contemplação</span></a>
+                        <a href="simulador.xlsx" target="_blank" class="nav-link" data-page="simulador"><svg class="w-8 h-8 mr-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-4 4h4m2 0h-2m-4 4h4m2 0h-2m-4-8v8m-4-4h.01M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"></path></svg><span class="link-text">Simulador</span></a>
+                    </div>
+                </nav>
+            </aside>
+
+            <div class="flex-1 min-w-0">
+                <main class="bg-panel p-6 sm:p-8 rounded-xl shadow-lg min-h-[700px] w-full relative">
+                    
+                    <!-- CONTROLES SUPERIORES ESQUERDOS (TABS) -->
+                    <div id="tab-controls" class="absolute top-6 left-6 flex gap-2 z-10">
+                        <button class="tab-button active" data-tab="porto-tab">Porto Seguro</button>
+                        <button class="tab-button" data-tab="hs-tab">HS Consórcios</button>
+                    </div>
+
+                    <h2 class="text-5xl font-extrabold text-center mb-4 text-wk-dark-blue">Pirâmide de Contemplação</h2>
+                    <p class="text-center text-xl text-wk-text-secondary mb-10">Estratégias e probabilidades para ser contemplado no consórcio.</p>
+                    
+                    <!-- PAINEL PRINCIPAL: Conteúdo das Abas (Pirâmides) -->
+                    <div id="tab-content-container" class="h-full">
+                        <!-- Aba Porto Seguro -->
+                        <div id="porto-tab" class="tab-content h-full">
+                             <div class="content-wrapper h-full">
+                                <div class="main-content">
+                                    <div class="flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-16">
+                                        <div class="pyramid-graphic-container">
+                                            <div class="pyramid-shape-3-level">
+                                                <div class="pyramid-text" style="top: 16.66%; width: 33%;">Lance Livre</div>
+                                                <div class="pyramid-text" style="top: 50%; width: 66%;">Lance Fixo 40%</div>
+                                                <div class="pyramid-text" style="top: 83.33%; width: 100%;">Sorteio</div>
+                                            </div>
+                                        </div>
+                                        <div class="h-[480px] flex flex-col justify-around flex-shrink-0 w-full max-w-md z-10 text-xl">
+                                            <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-red-600"></div><div><h3 class="font-bold text-red-600">Lance Livre</h3><p class="text-lg text-gray-600">Oferte um percentual do seu crédito para antecipar a contemplação.</p></div></div>
+                                            <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-sky-500"></div><div><h3 class="font-bold text-sky-500">Lance Fixo</h3><p class="text-lg text-gray-600">Concorra com outros consorciados que ofertaram o mesmo percentual fixo.</p></div></div>
+                                            <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-blue-500"></div><div><h3 class="font-bold text-blue-500">Sorteio</h3><p class="text-lg text-gray-600">Todos os participantes com pagamentos em dia concorrem igualmente.</p></div></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="promo-details p-6">
+                                    <div class="bg-red-600 text-white rounded-lg shadow-2xl p-6 flex flex-col items-center justify-center w-[250px] h-[250px]">
+                                        <span class="text-7xl font-extrabold">50%</span>
+                                        <span class="text-3xl font-bold tracking-wider">DESCONTO</span>
+                                        <p class="text-center text-lg mt-4">Pague metade da parcela até a contemplação!</p>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+
+                        <!-- Aba HS Consórcios -->
+                        <div id="hs-tab" class="tab-content hidden h-full promo-active">
+                             <div class="content-wrapper h-full">
+                                <div class="main-content">
+                                    <div id="hs-pyramid-container" class="relative">
+                                        <div id="hs-default-view" class="view-container">
+                                            <div class="flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-16">
+                                                <div class="pyramid-graphic-container">
+                                                    <div class="pyramid-shape-3-level">
+                                                        <div class="pyramid-text" style="top: 16.66%; width: 33%;">Lance Livre</div>
+                                                        <div class="pyramid-text" style="top: 50%; width: 66%;">Lance Fixo 30%</div>
+                                                        <div class="pyramid-text" style="top: 83.33%; width: 100%;">Sorteio</div>
+                                                    </div>
+                                                </div>
+                                                <div class="h-[480px] flex flex-col justify-around flex-shrink-0 w-full max-w-md z-10 text-xl">
+                                                    <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-red-600"></div><div><h3 class="font-bold text-red-600">Lance Livre</h3><p class="text-lg text-gray-600">Oferte um percentual do seu crédito.</p></div></div>
+                                                    <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-sky-500"></div><div><h3 class="font-bold text-sky-500">Lance Fixo</h3><p class="text-lg text-gray-600">Concorra com outros com o mesmo percentual.</p></div></div>
+                                                    <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-blue-500"></div><div><h3 class="font-bold text-blue-500">Sorteio</h3><p class="text-lg text-gray-600">Todos os participantes concorrem igualmente.</p></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="hs-promo-view" class="view-container hidden">
+                                            <div class="flex flex-col lg:flex-row justify-center items-center gap-8 lg:gap-16">
+                                                <div class="pyramid-graphic-container">
+                                                    <div class="pyramid-shape-6-level">
+                                                        <div class="pyramid-text" style="top: 8.33%; width: 16%;">Lance Livre</div>
+                                                        <div class="pyramid-text" style="top: 25%; width: 33%;">Fid 18 Meses</div>
+                                                        <div class="pyramid-text" style="top: 41.66%; width: 50%;">Fid 12 Meses</div>
+                                                        <div class="pyramid-text" style="top: 58.33%; width: 66%;">Fid 6 Meses</div>
+                                                        <div class="pyramid-text" style="top: 75%; width: 83%;">Lance Fixo</div>
+                                                        <div class="pyramid-text" style="top: 91.66%; width: 100%;">Sorteio</div>
+                                                    </div>
+                                                </div>
+                                                <div class="h-[480px] flex flex-col justify-around flex-shrink-0 w-full max-w-md z-10 text-xl">
+                                                    <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-red-600"></div><div><h3 class="font-bold text-red-600">Lance Livre (65% a 85%)</h3><p class="text-lg text-gray-600">Maior chance de contemplação.</p></div></div>
+                                                    <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-orange-500"></div><div><h3 class="font-bold text-orange-500">Fid 18 Meses (40%)</h3><p class="text-lg text-gray-600">Participação de 40% com 60% de chance.</p></div></div>
+                                                    <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-amber-500"></div><div><h3 class="font-bold text-amber-500">Fid 12 Meses (60%)</h3><p class="text-lg text-gray-600">Participação de 60% com 40% de chance.</p></div></div>
+                                                    <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-green-500"></div><div><h3 class="font-bold text-green-500">Fid 6 Meses (70%)</h3><p class="text-lg text-gray-600">Participação de 70% com 30% de chance.</p></div></div>
+                                                    <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-sky-500"></div><div><h3 class="font-bold text-sky-500">Lance Fixo (85%)</h3><p class="text-lg text-gray-600">Participação de 85% com 15% de chance.</p></div></div>
+                                                    <div class="flex items-center"><div class="w-5 h-5 rounded-full mr-4 flex-shrink-0 bg-blue-500"></div><div><h3 class="font-bold text-blue-500">Sorteio (100%)</h3><p class="text-lg text-gray-600">Todos participantes concorrem igualmente.</p></div></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="promo-details p-6">
+                                    <div class="bg-red-600 text-white rounded-lg shadow-2xl p-6 flex flex-col items-center justify-center w-[250px] h-[250px]">
+                                        <span class="text-7xl font-extrabold">50%</span>
+                                        <span class="text-3xl font-bold tracking-wider">DESCONTO</span>
+                                        <p class="text-center text-lg mt-4">Pague metade da parcela até a contemplação!</p>
+                                    </div>
+                                </div>
+                             </div>
+                        </div>
+                    </div>
+
+                    <!-- CONTROLES INFERIORES DIREITOS -->
+                    <div id="toggle-controls-container" class="absolute bottom-6 right-6 flex flex-col gap-4 z-10">
+                        <div id="porto-toggle-container">
+                            <div class="flex items-center justify-start gap-3">
+                                <span class="text-sm font-semibold text-wk-vibrant-blue">Ativar Promoção</span>
+                                <div class="relative inline-block w-10 align-middle select-none">
+                                    <input type="checkbox" name="toggle" id="porto-promo-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                                    <label for="porto-promo-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="hs-toggle-container" class="hidden">
+                            <div class="flex items-center justify-start gap-3">
+                                <span class="text-sm font-semibold text-wk-vibrant-blue">Ativar super promoção</span>
+                                <div class="relative inline-block w-10 align-middle select-none">
+                                    <input type="checkbox" name="toggle" id="hs-promo-toggle" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer"/>
+                                    <label for="hs-promo-toggle" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Lógica do Sidebar Principal ---
+            const sidebar = document.getElementById('main-sidebar');
+            if (sidebar) {
+                sidebar.addEventListener('mouseenter', () => sidebar.classList.remove('collapsed'));
+                sidebar.addEventListener('mouseleave', () => sidebar.classList.add('collapsed'));
+            }
+
+            const currentPage = 'piramide';
+            const navLinks = document.querySelectorAll('#main-sidebar .nav-link');
+            navLinks.forEach(link => {
+                const page = link.getAttribute('data-page');
+                if(page && page !== 'simulador') { link.href = page + '.html'; }
+                if (page === currentPage) {
+                    link.classList.add('active');
+                    link.href = "#"; 
+                }
+            });
+
+            // --- Lógica das Abas e Toggles ---
+            const tabControls = document.getElementById('tab-controls');
+            const tabContainer = document.getElementById('tab-content-container');
+            const portoToggleContainer = document.getElementById('porto-toggle-container');
+            const hsToggleContainer = document.getElementById('hs-toggle-container');
+            const allToggles = document.querySelectorAll('.toggle-checkbox');
+            const portoTabContent = document.getElementById('porto-tab');
+            const hsTabContent = document.getElementById('hs-tab');
+            
+            if(tabControls && tabContainer) {
+                const buttons = tabControls.querySelectorAll('.tab-button');
+                buttons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        allToggles.forEach(toggle => {
+                            if (toggle.checked) {
+                                toggle.checked = false;
+                                toggle.dispatchEvent(new Event('change'));
+                            }
+                        });
+                        
+                        buttons.forEach(btn => btn.classList.remove('active'));
+                        button.classList.add('active');
+                        
+                        tabContainer.querySelectorAll('.tab-content').forEach(content => {
+                            content.classList.add('hidden');
+                        });
+                        
+                        const tabId = button.getAttribute('data-tab');
+                        const activeContent = document.getElementById(tabId);
+                        if(activeContent) {
+                            activeContent.classList.remove('hidden');
+                        }
+                        
+                        // Lógica da classe 'promo-active'
+                        portoTabContent.classList.remove('promo-active'); // Sempre reseta a promo da Porto
+                        hsTabContent.classList.add('promo-active'); // Garante que HS sempre tenha a promo visível
+
+                        if (tabId === 'porto-tab') {
+                            portoToggleContainer.classList.remove('hidden');
+                            hsToggleContainer.classList.add('hidden');
+                        } else {
+                            portoToggleContainer.classList.add('hidden');
+                            hsToggleContainer.classList.remove('hidden');
+                        }
+                    });
+                });
+                // Garante estado inicial correto
+                hsTabContent.classList.add('promo-active');
+            }
+
+            // --- Lógica da Promoção Porto Seguro ---
+            const portoToggle = document.getElementById('porto-promo-toggle');
+            if (portoToggle && portoTabContent) {
+                portoToggle.addEventListener('change', function() {
+                    portoTabContent.classList.toggle('promo-active', this.checked);
+                });
+            }
+
+            // --- Lógica da Troca de Pirâmide HS ---
+            const hsToggle = document.getElementById('hs-promo-toggle');
+            const hsDefaultView = document.getElementById('hs-default-view');
+            const hsPromoView = document.getElementById('hs-promo-view');
+            if (hsToggle && hsDefaultView && hsPromoView) {
+                hsToggle.addEventListener('change', function() {
+                    // Apenas alterna a visibilidade das pirâmides
+                    hsDefaultView.classList.toggle('hidden', this.checked);
+                    hsPromoView.classList.toggle('hidden', !this.checked);
+                });
+            }
+        });
+    </script>
+
+</body>
+</html>

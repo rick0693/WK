@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consórcio na Prática - Gerador de negócios WK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Link para o arquivo CSS padrão do sidebar -->
+    <link rel="stylesheet" href="sidebar.css">
+
+    <!-- Estilos específicos para a animação desta página -->
+    <style>
+        :root {
+            /* Variavel especifica para esta pagina */
+            --color-patrimonio: #20c997;
+        }
+
+        @keyframes slideInUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ESTILOS DA ANIMAÇÃO DE CONSÓRCIO */
+        #consorcio-animation-wrapper {
+            display: flex;
+            gap: 1.5rem;
+            align-items: stretch;
+            width: 100%;
+            /* Ajustado para caber dentro do .main-content-panel */
+            height: 100%; 
+            min-height: 550px;
+        }
+        #history-panel {
+            flex: 0 0 350px;
+            height: 100%;
+            background-color: #fff;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+        #history-table {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        .history-header, .history-row {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1.2fr;
+            gap: 0.5rem;
+            padding: 0.5rem;
+            text-align: right;
+            font-size: 0.8rem;
+        }
+        .history-header {
+            font-weight: 700;
+            color: var(--wk-text-primary);
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            background-color: white;
+        }
+        .history-header span:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+        .history-row {
+            border-radius: 4px;
+            animation: slideInUp 0.5s ease forwards;
+        }
+        /* [ALTERAÇÃO] Estilos de cor para a tabela */
+        .history-row span:first-child {
+            text-align: left;
+            font-weight: 700;
+            color: var(--wk-dark-blue); /* Nomes em azul escuro */
+        }
+        .history-row span:not(:first-child) {
+            font-weight: 700; /* Números em negrito */
+            color: #4b5563; /* Números em cinza escuro */
+        }
+        .history-row:nth-child(even) {
+            background-color: var(--bg-main);
+        }
+        #consorcio-animation-container {
+            flex-grow: 1;
+            position: relative;
+            height: 100%;
+            background-color: #f8fafc;
+            border-radius: 0.75rem;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+        .participant {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        .participant-icon {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background-color: #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        .participant-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .participant-name {
+            margin-top: 0.75rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--wk-text-secondary);
+            background-color: rgba(255,255,255,0.8);
+            padding: 2px 10px;
+            border-radius: 9999px;
+        }
+        .participant.contemplated .participant-icon {
+            border-color: #a7f3d0;
+        }
+        .participant.contemplated::after {
+            content: '✓';
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 28px;
+            height: 28px;
+            background-color: var(--color-patrimonio);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+        .participant.active {
+            transform: scale(1.1);
+        }
+        .participant.active .participant-icon {
+            box-shadow: 0 0 25px var(--wk-vibrant-blue);
+        }
+        .central-hub {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            width: 280px;
+            z-index: 20;
+        }
+        .central-hub-info {
+            background-color: white;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
+        }
+        .credit-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--wk-vibrant-blue);
+            transition: all 0.3s ease;
+        }
+        .credit-value.updated {
+            transform: scale(1.1);
+            color: var(--color-patrimonio);
+        }
+        .parcela-value {
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--wk-text-secondary);
+        }
+        .animation-status {
+            margin-top: 1rem;
+            font-weight: 600;
+            color: var(--wk-text-primary);
+            height: 40px;
+            font-size: 1.1rem;
+        }
+        .anim-object, .coin {
+            position: absolute;
+            transition-property: all;
+            z-index: 10;
+        }
+        .anim-object {
+            transition-timing-function: cubic-bezier(0.5, 0, 0.5, 1.5);
+            opacity: 0;
+        }
+        .coin {
+            transition-timing-function: ease-out;
+            z-index: 5;
+        }
+        .animation-controls {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 0.5rem;
+            border-radius: 9999px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 30;
+        }
+        .control-btn {
+            background-color: #e9ecef;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--wk-text-secondary);
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .control-btn:hover {
+            background-color: #dee2e6;
+            color: var(--wk-text-primary);
+        }
+    </style>
+</head>
+<body class="antialiased">
+    
+    <div class="p-4 sm:p-6 lg:p-8 max-w-full mx-auto">
+        
+        <header class="mb-8 p-6 rounded-xl text-white flex items-center justify-between" style="background: linear-gradient(90deg, var(--wk-dark-blue) 0%, var(--wk-vibrant-blue) 100%);">
+            <div class="flex items-center gap-4">
+                <div>
+                    <h1 class="text-4xl font-bold">Consórcio na Prática</h1>
+                </div>
+            </div>
+            <img src="https://grupo-wk.com/wp-content/uploads/2024/10/Logo-Grupo-WG-03-1024x1024.png" alt="Logo WK" class="h-24" onerror="this.onerror=null;this.src='https://placehold.co/180x96/001f5a/ffffff?text=WK+Logo';">
+        </header>
+
+        <div id="main-container" class="main-container">
+            
+            <aside id="sidebar" class="collapsed">
+                <nav>
+                    <div class="logo-container">
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <a href="index.html" class="nav-link" data-page="index"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span class="link-text">Quem Somos</span></a>
+                        <a href="consorcio-pratica.html" class="nav-link" data-page="consorcio-pratica"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="link-text">Consórcio na Prática</span></a>
+                        <a href="modalidades.html" class="nav-link" data-page="modalidades"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg><span class="link-text">Modalidades</span></a>
+                        <a href="financiamento.html" class="nav-link" data-page="financiamento"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg><span class="link-text">Financiamento</span></a>
+                        <a href="consorcio.html" class="nav-link" data-page="consorcio"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg><span class="link-text">Consórcio</span></a>
+                        <a href="jornada.html" class="nav-link" data-page="jornada"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-1.447-.894L15 7m-6 13v-5.5m0 0l6-3m-6 3l-6-3"></path></svg><span class="link-text">Jornada Patrimônio</span></a>
+                        <a href="piramide.html" class="nav-link" data-page="piramide"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg><span class="link-text">Pirâmide Contemplação</span></a>
+                        <a href="simulador.xlsx" target="_blank" class="nav-link" data-page="simulador"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-4 4h4m2 0h-2m-4 4h4m2 0h-2m-4-8v8m-4-4h.01M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"></path></svg><span class="link-text">Simulador</span></a>
+                    </div>
+                </nav>
+            </aside>
+
+            <!-- [ALTERAÇÃO] Aplicada a estrutura de painel padrão -->
+            <main>
+                <div class="main-content-panel content-animation">
+                    <div id="consorcio-animation-wrapper">
+                        <!-- A animação é gerada pelo JavaScript -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Script para o Toggle da Sidebar com MOUSE HOVER
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.addEventListener('mouseenter', () => sidebar.classList.remove('collapsed'));
+                sidebar.addEventListener('mouseleave', () => sidebar.classList.add('collapsed'));
+            }
+
+            // Script para marcar o link ativo da página atual
+            const currentPage = 'consorcio-pratica';
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                const page = link.getAttribute('data-page');
+                if (page === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+
+            // --- LÓGICA DA ANIMAÇÃO "CONSÓRCIO NA PRÁTICA" ---
+            function runConsorcioStory() {
+                const wrapper = document.getElementById('consorcio-animation-wrapper');
+                if (!wrapper) return;
+
+                if (window.consorcioAnimation) {
+                    window.consorcioAnimation.stop();
+                }
+
+                const participantsData = [
+                    { name: 'Wellington', img: 'https://randomuser.me/api/portraits/men/32.jpg' }, 
+                    { name: 'Roberta', img: 'https://randomuser.me/api/portraits/women/44.jpg' }, 
+                    { name: 'Matheus', img: 'https://randomuser.me/api/portraits/men/36.jpg' },
+                    { name: 'Joyce', img: 'https://randomuser.me/api/portraits/women/47.jpg' }, 
+                    { name: 'Ricardo', img: 'https://randomuser.me/api/portraits/men/38.jpg' }, 
+                    { name: 'Sophia', img: 'https://randomuser.me/api/portraits/women/50.jpg' },
+                    { name: 'João', img: 'https://randomuser.me/api/portraits/men/41.jpg' }, 
+                    { name: 'Maria', img: 'https://randomuser.me/api/portraits/women/55.jpg' }, 
+                    { name: 'Pedro', img: 'https://randomuser.me/api/portraits/men/45.jpg' }, 
+                    { name: 'Joaquim', img: 'https://randomuser.me/api/portraits/men/50.jpg' }
+                ];
+
+                const creditData = [
+                    { credit: 1000, parcela: 100 }, { credit: 1100, parcela: 110 },
+                    { credit: 1200, parcela: 120 }, { credit: 1300, parcela: 130 },
+                    { credit: 1400, parcela: 140 }, { credit: 1500, parcela: 150 },
+                    { credit: 1600, parcela: 160 }, { credit: 1700, parcela: 170 },
+                    { credit: 1800, parcela: 180 }, { credit: 1900, parcela: 190 }
+                ];
+
+                const icons = {
+                    key: `<svg class="w-12 h-12 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"></path></svg>`,
+                    play: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4z"></path></svg>`,
+                    pause: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M5 4h3v12H5V4zm7 0h3v12h-3V4z"></path></svg>`,
+                    restart: `<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"></path></svg>`,
+                    coin: `<svg class="w-8 h-8 text-amber-500" fill="currentColor" viewBox="0 0 20 20"><path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"></path></svg>`
+                };
+
+                window.consorcioAnimation = {
+                    participants: [],
+                    elements: {},
+                    timeouts: [],
+                    availableIndices: [],
+                    currentMonth: 0,
+                    isPaused: false,
+                    isStopped: false,
+                    playbackSpeed: 1,
+                    speeds: [1, 1.25, 1.5, 2],
+                    currentSpeedIndex: 0,
+
+                    getDuration(base) {
+                        return base / this.playbackSpeed;
+                    },
+
+                    setup() {
+                        wrapper.innerHTML = `
+                            <div id="history-panel">
+                                <div class="history-header">
+                                    <span>Contemplado</span>
+                                    <span>Crédito</span>
+                                    <span>Parcela</span>
+                                    <span>Valor Pago</span>
+                                </div>
+                                <div id="history-table"></div>
+                            </div>
+                            <div id="consorcio-animation-container"></div>
+                        `;
+                        
+                        this.container = document.getElementById('consorcio-animation-container');
+                        this.elements.historyTable = document.getElementById('history-table');
+                        
+                        this.elements.centralHub = document.createElement('div');
+                        this.elements.centralHub.className = 'central-hub';
+                        this.elements.centralHub.innerHTML = `
+                            <div class="central-hub-info">
+                                <div id="credit-value" class="credit-value"></div>
+                                <div id="parcela-value" class="parcela-value"></div>
+                            </div>
+                            <div id="animation-status" class="animation-status"></div>
+                        `;
+                        this.container.appendChild(this.elements.centralHub);
+
+                        this.elements.controls = document.createElement('div');
+                        this.elements.controls.className = 'animation-controls';
+                        this.elements.controls.innerHTML = `
+                            <button id="speed-btn" class="control-btn">1x</button>
+                            <button id="play-pause-btn" class="control-btn">${icons.pause}</button>
+                            <button id="restart-btn" class="control-btn">${icons.restart}</button>
+                        `;
+                        this.container.appendChild(this.elements.controls);
+                        document.getElementById('play-pause-btn').onclick = () => this.togglePause();
+                        document.getElementById('restart-btn').onclick = () => this.restart();
+                        document.getElementById('speed-btn').onclick = () => this.changeSpeed();
+                        
+                        const positions = [
+                            { top: '15%', left: '15%' }, { top: '15%', left: '40%' }, { top: '15%', left: '65%' }, { top: '15%', left: '90%' },
+                            { top: '50%', left: '90%' }, { top: '85%', left: '90%' }, { top: '85%', left: '65%' }, { top: '85%', left: '40%' },
+                            { top: '85%', left: '15%' }, { top: '50%', left: '15%' }
+                        ];
+
+                        participantsData.forEach((p, i) => {
+                            const elem = document.createElement('div');
+                            elem.className = 'participant';
+                            elem.style.left = positions[i].left;
+                            elem.style.top = positions[i].top;
+                            elem.style.transform = 'translate(-50%, -50%)';
+                            elem.innerHTML = `
+                                <div class="participant-icon"><img src="${p.img}" alt="${p.name}" onerror="this.onerror=null;this.src='https://placehold.co/72x72/cbd5e1/475569?text=?';"></div>
+                                <div class="participant-name">${p.name}</div>
+                            `;
+                            this.container.appendChild(elem);
+                            this.participants.push({ ...p, element: elem });
+                        });
+
+                        this.elements.key = document.createElement('div');
+                        this.elements.key.className = 'anim-object';
+                        this.elements.key.innerHTML = icons.key;
+                        this.container.appendChild(this.elements.key);
+                    },
+
+                    start() {
+                        this.isStopped = false;
+                        this.isPaused = false;
+                        this.currentMonth = 0;
+                        this.availableIndices = Array.from(Array(this.participants.length).keys());
+                        this.elements.historyTable.innerHTML = '';
+                        
+                        this.participants.forEach(p => {
+                            p.element.classList.remove('contemplated', 'active');
+                        });
+                        this.loop();
+                    },
+                    
+                    loop() {
+                        if (this.isPaused || this.isStopped) return;
+                        this.clearTimeouts();
+
+                        if (this.availableIndices.length === 0) {
+                            this.elements.centralHub.querySelector('#animation-status').textContent = 'Todos foram contemplados!';
+                            this.stop(false);
+                            return;
+                        }
+                        
+                        this.showContributions();
+                    },
+
+                    showContributions() {
+                        const hubRect = this.elements.centralHub.getBoundingClientRect();
+                        const containerRect = this.container.getBoundingClientRect();
+                        
+                        this.elements.centralHub.querySelector('#animation-status').textContent = 'Todos contribuindo...';
+
+                        this.participants.forEach(p => {
+                            const pRect = p.element.getBoundingClientRect();
+                            const coin = document.createElement('div');
+                            coin.className = 'coin';
+                            coin.innerHTML = icons.coin;
+                            coin.style.left = `${pRect.left - containerRect.left + pRect.width / 2 - 16}px`;
+                            coin.style.top = `${pRect.top - containerRect.top + pRect.height / 2 - 16}px`;
+                            this.container.appendChild(coin);
+
+                            setTimeout(() => {
+                                coin.style.transitionDuration = `${this.getDuration(800)}ms`;
+                                coin.style.left = `${hubRect.left - containerRect.left + hubRect.width / 2}px`;
+                                coin.style.top = `${hubRect.top - containerRect.top + hubRect.height / 2}px`;
+                                coin.style.opacity = '0';
+                                coin.style.transform = 'scale(0.5)';
+                                setTimeout(() => coin.remove(), this.getDuration(800));
+                            }, 50);
+                        });
+                        
+                        this.timeouts.push(setTimeout(() => {
+                            const randomIndexInAvailable = Math.floor(Math.random() * this.availableIndices.length);
+                            const participantIndex = this.availableIndices.splice(randomIndexInAvailable, 1)[0];
+                            this.runStep(participantIndex);
+                        }, this.getDuration(1500)));
+                    },
+
+                    runStep(index) {
+                        const participant = this.participants[index];
+                        const creditInfo = creditData[this.currentMonth];
+                        const hub = this.elements.centralHub;
+                        
+                        this.participants.forEach(p => p.element.classList.remove('active'));
+
+                        hub.querySelector('#animation-status').textContent = 'Sorteando...';
+                        this.timeouts.push(setTimeout(() => {
+                            hub.querySelector('#credit-value').textContent = `Crédito: ${creditInfo.credit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                            hub.querySelector('#parcela-value').textContent = `Parcela: ${creditInfo.parcela.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}`;
+                            hub.querySelector('#credit-value').classList.add('updated');
+                            
+                            this.timeouts.push(setTimeout(() => {
+                                hub.querySelector('#credit-value').classList.remove('updated');
+                                hub.querySelector('#animation-status').textContent = `Contemplado(a): ${participant.name}!`;
+                                participant.element.classList.add('active');
+
+                                this.timeouts.push(setTimeout(() => {
+                                    const key = this.elements.key;
+                                    const pRect = participant.element.getBoundingClientRect();
+                                    const hubRect = hub.getBoundingClientRect();
+                                    const containerRect = this.container.getBoundingClientRect();
+
+                                    key.style.transitionDuration = `${this.getDuration(800)}ms`;
+                                    key.style.left = `${hubRect.left - containerRect.left + hubRect.width/2}px`;
+                                    key.style.top = `${hubRect.top - containerRect.top + hubRect.height/2}px`;
+                                    key.style.transform = 'translate(-50%, -50%) scale(1)';
+                                    key.style.opacity = '1';
+
+                                    this.timeouts.push(setTimeout(() => {
+                                        key.style.left = `${pRect.left - containerRect.left + pRect.width / 2}px`;
+                                        key.style.top = `${pRect.top - containerRect.top + pRect.height / 2}px`;
+                                        key.style.transform = 'translate(-50%, -50%) scale(0)';
+                                        key.style.opacity = '0';
+                                        
+                                        participant.element.classList.add('contemplated');
+                                        participant.element.classList.remove('active');
+                                        
+                                        this.addHistoryEntry(participant.name, creditInfo, this.currentMonth);
+                                        this.currentMonth++;
+
+                                        this.timeouts.push(setTimeout(() => this.loop(), this.getDuration(3200)));
+                                    }, this.getDuration(800)));
+                                }, this.getDuration(2000)));
+                            }, this.getDuration(2000)));
+                        }, this.getDuration(800)));
+                    },
+
+                    addHistoryEntry(name, info, month) {
+                        const row = document.createElement('div');
+                        row.className = 'history-row';
+                        let valorPagoHTML = '<span>-</span>';
+
+                        if (month === 4 || month === 9) {
+                            let totalPaid = 0;
+                            for(let i = 0; i <= month; i++) {
+                                totalPaid += creditData[i].parcela;
+                            }
+                            valorPagoHTML = `<span>${totalPaid.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>`;
+                        }
+
+                        row.innerHTML = `
+                            <span>${name}</span>
+                            <span>${info.credit.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                            <span>${info.parcela.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}</span>
+                            ${valorPagoHTML}
+                        `;
+                        this.elements.historyTable.appendChild(row);
+                        this.elements.historyTable.scrollTop = this.elements.historyTable.scrollHeight;
+                    },
+
+                    changeSpeed() {
+                        this.currentSpeedIndex = (this.currentSpeedIndex + 1) % this.speeds.length;
+                        this.playbackSpeed = this.speeds[this.currentSpeedIndex];
+                        document.getElementById('speed-btn').textContent = `${this.playbackSpeed}x`;
+                    },
+
+                    togglePause() {
+                        this.isPaused = !this.isPaused;
+                        document.getElementById('play-pause-btn').innerHTML = this.isPaused ? icons.Aplay : icons.pause;
+                        if (!this.isPaused) {
+                            this.loop();
+                        }
+                    },
+                    
+                    restart() {
+                        this.stop();
+                        this.setup();
+                        this.start();
+                    },
+
+                    stop(clear = true) {
+                        this.isStopped = true;
+                        if(clear) this.clearTimeouts();
+                    },
+                    
+                    clearTimeouts() {
+                        this.timeouts.forEach(clearTimeout);
+                        this.timeouts = [];
+                    }
+                };
+
+                window.consorcioAnimation.setup();
+                window.consorcioAnimation.start();
+            }
+
+            // Inicia a animação assim que a página carrega
+            runConsorcioStory();
+        });
+    </script>
+</body>
+</html>

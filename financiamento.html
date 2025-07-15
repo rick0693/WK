@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financiamento - Gerador de negócios WK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Link para o arquivo CSS padrão do sidebar -->
+    <link rel="stylesheet" href="sidebar.css">
+
+    <!-- Estilos específicos para a página de Financiamento -->
+    <style>
+        :root {
+            --color-consorcio: #3b82f6;
+            --color-financiamento: #ef4444; /* Corresponde a 'bg-red-500' do Tailwind */
+        }
+        
+        .main-content-panel {
+            height: 100%; 
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* [ALTERAÇÃO] Reduzido o tamanho do círculo */
+        .cost-circle-container {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: auto;
+        }
+        .cost-circle-svg {
+            width: 100%;
+            height: 100%;
+            transform: rotate(-90deg);
+        }
+        .cost-circle-bg {
+            fill: none;
+            stroke: #e2e8f0; /* gray-200 */
+            stroke-width: 16;
+        }
+        .cost-circle-progress {
+            fill: none;
+            stroke: var(--color-financiamento);
+            stroke-width: 16;
+            stroke-linecap: round;
+            /* [ALTERAÇÃO] Valor ajustado para o novo raio (2 * PI * 67) */
+            stroke-dasharray: 421; 
+            stroke-dashoffset: 421;
+            /* [ALTERAÇÃO] Velocidade da animação reduzida */
+            animation: fill-circle 5s 0.5s ease-out forwards;
+        }
+        .cost-circle-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--wk-dark-blue);
+        }
+        /* [ALTERAÇÃO] Fonte do círculo ajustada */
+        .cost-circle-text .value {
+            font-size: 3.75rem; /* text-6xl */
+            font-weight: 800;
+            line-height: 1;
+            color: var(--color-financiamento);
+        }
+        .cost-circle-text .label {
+            font-size: 0.75rem; /* text-xs */
+            font-weight: 600;
+            margin-top: -0.25rem;
+        }
+        @keyframes fill-circle {
+            to {
+                /* (421 * (1 - 0.85)) - Deixa um pequeno espaço no final */
+                stroke-dashoffset: 63; 
+            }
+        }
+
+        /* [ALTERAÇÃO] Estilos da Linha do Tempo ajustados para serem mais compactos */
+        .timeline-container { position: relative; padding-top: 1.5rem; }
+        .timeline-axis {
+            position: absolute; top: 0; left: 0; width: 100%; height: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .axis-marker {
+            position: absolute; bottom: -1.25rem; transform: translateX(-50%);
+            font-size: 0.75rem; font-weight: 600; color: var(--wk-text-secondary);
+        }
+        .axis-marker::before {
+            content: ''; position: absolute; width: 2px; height: 0.4rem;
+            background-color: var(--border-color); top: -0.4rem; left: 50%;
+            transform: translateX(-50%);
+        }
+        .timeline-track { position: relative; width: 100%; height: 1.75rem; background-color: #e2e8f0; border-radius: 9999px; }
+        .timeline-bar {
+            position: absolute; height: 100%; border-radius: 9999px;
+            transform: scaleX(0); transform-origin: left;
+            /* [ALTERAÇÃO] Velocidade da animação reduzida */
+            animation: grow 5s 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            display: flex; align-items: center; justify-content: flex-start;
+            padding-left: 1rem; color: white; font-weight: 600;
+            font-size: 0.8rem; text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        .event-marker {
+            position: absolute; top: 50%; transform: translate(-50%, -50%);
+            width: 1.75rem; height: 1.75rem; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; cursor: pointer; z-index: 10;
+            opacity: 0; animation: fadeInMarker 0.5s 4.5s ease-out forwards;
+            border: 2px solid var(--bg-panel);
+        }
+        .event-marker .tooltip {
+            visibility: hidden; width: 160px; background-color: var(--wk-text-primary);
+            color: #fff; text-align: center; border-radius: 6px; padding: 8px 10px;
+            position: absolute; z-index: 1; bottom: 150%; left: 50%;
+            margin-left: -80px; opacity: 0; transition: opacity 0.3s;
+            font-size: 0.9rem; font-weight: 500;
+        }
+        .event-marker .tooltip::after {
+            content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+            border-width: 5px; border-style: solid; border-color: var(--wk-text-primary) transparent transparent transparent;
+        }
+        .event-marker:hover .tooltip { visibility: visible; opacity: 1; }
+        @keyframes grow { to { transform: scaleX(1); } }
+        @keyframes fadeInMarker {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    
+    <div class="p-4 sm:p-6 lg:p-8 max-w-full mx-auto">
+        
+        <header class="mb-8 p-6 rounded-xl text-white flex items-center justify-between" style="background: linear-gradient(90deg, var(--wk-dark-blue) 0%, var(--wk-vibrant-blue) 100%);">
+            <div class="flex items-center gap-4">
+                <div>
+                    <h1 class="text-4xl font-bold">O Custo do Financiamento</h1>
+                </div>
+            </div>
+            <img src="https://grupo-wk.com/wp-content/uploads/2024/10/Logo-Grupo-WG-03-1024x1024.png" alt="Logo WK" class="h-24" onerror="this.onerror=null;this.src='https://placehold.co/180x96/001f5a/ffffff?text=WK+Logo';">
+        </header>
+
+        <div id="main-container" class="main-container">
+            
+            <aside id="sidebar" class="collapsed">
+                <nav>
+                    <div class="logo-container">
+                    </div>
+                    <div class="flex flex-col space-y-2">
+                        <a href="index.html" class="nav-link" data-page="index"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg><span class="link-text">Quem Somos</span></a>
+                        <a href="consorcio-pratica.html" class="nav-link" data-page="consorcio-pratica"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg><span class="link-text">Consórcio na Prática</span></a>
+                        <a href="modalidades.html" class="nav-link" data-page="modalidades"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg><span class="link-text">Modalidades</span></a>
+                        <a href="financiamento.html" class="nav-link" data-page="financiamento"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"></path></svg><span class="link-text">Financiamento</span></a>
+                        <a href="consorcio.html" class="nav-link" data-page="consorcio"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg><span class="link-text">Consórcio</span></a>
+                        <a href="jornada.html" class="nav-link" data-page="jornada"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447 2.724A1 1 0 0021 16.382V5.618a1 1 0 00-1.447-.894L15 7m-6 13v-5.5m0 0l6-3m-6 3l-6-3"></path></svg><span class="link-text">Jornada Patrimônio</span></a>
+                        <a href="piramide.html" class="nav-link" data-page="piramide"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg><span class="link-text">Pirâmide Contemplação</span></a>
+                        <a href="simulador.xlsx" target="_blank" class="nav-link" data-page="simulador"><svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m-4 4h4m2 0h-2m-4 4h4m2 0h-2m-4-8v8m-4-4h.01M5 3h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2z"></path></svg><span class="link-text">Simulador</span></a>
+                    </div>
+                </nav>
+            </aside>
+
+            <main>
+                <div class="main-content-panel content-animation">
+                    <h2 class="text-2xl font-bold text-center mb-1">Jornada de Aquisição e Patrimônio</h2>
+                    <p class="text-center text-base text-wk-text-secondary mb-4">Uma visão de longo prazo sobre o financiamento.</p>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch mb-4">
+                        
+                        <div class="bg-red-500 text-white p-4 rounded-lg flex flex-col justify-center shadow-lg">
+                            <h4 class="font-extrabold text-xl text-center">Simulação de Custo</h4>
+                            <p class="mt-2 text-sm text-center text-red-100">
+                                Para um crédito de <b class="font-black text-white">R$ 1.000.000,00</b>, você inicia com uma prestação de <b class="font-black text-white">R$ 14.000,00</b>, um compromisso financeiro que se estende por <b class="font-black text-white">35 anos</b>, consumindo sua renda e limitando seu potencial de crescimento.
+                            </p>
+                        </div>
+
+                        <div class="p-4 border rounded-lg flex flex-col items-center justify-center">
+                            <h3 class="text-base font-bold text-center mb-2">Custo Total de Até</h3>
+                            <div class="cost-circle-container">
+                                <svg class="cost-circle-svg" viewBox="0 0 200 200">
+                                    <circle class="cost-circle-bg" cx="100" cy="100" r="81"></circle>
+                                    <circle class="cost-circle-progress" cx="100" cy="100" r="81"></circle>
+                                </svg>
+                                <div class="cost-circle-text">
+                                    <span class="value">3x</span>
+                                    <span class="label">o valor do bem</span>
+                                </div>
+                            </div>
+                            <p class="text-center text-gray-600 mt-2 text-xs">Juros compostos podem mais que triplicar o custo final do seu patrimônio.</p>
+                        </div>
+                    </div>
+
+                    <div id="timeline-chart" class="timeline-container space-y-4">
+                        <!-- Conteúdo da Linha do Tempo gerado via JS -->
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.addEventListener('mouseenter', () => sidebar.classList.remove('collapsed'));
+                sidebar.addEventListener('mouseleave', () => sidebar.classList.add('collapsed'));
+            }
+
+            const currentPage = 'financiamento';
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                const page = link.getAttribute('data-page');
+                if (page === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+
+            function buildTimeline() {
+                const timelineChartContainer = document.getElementById('timeline-chart');
+                if (!timelineChartContainer || timelineChartContainer.dataset.built) return;
+                timelineChartContainer.innerHTML = ''; 
+                timelineChartContainer.dataset.built = 'true';
+
+                const maxAnos = 35;
+                const iconMap = {
+                    'Assinatura': `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>`,
+                    '1 Imóvel Quitado': `<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>`,
+                };
+                
+                const timelineData = [
+                    { label: 'Financiamento (Pagando Juros)', anos: 35, color: 'var(--color-financiamento)', barLabel: 'Pagamento de Juros', events: [{ ano: 0, label: 'Assinatura' }, { ano: 35, label: '1 Imóvel Quitado' }] }
+                ];
+                
+                const axis = document.createElement('div');
+                axis.className = 'timeline-axis';
+                for (let i = 0; i <= maxAnos; i += 5) {
+                    const marker = document.createElement('div');
+                    marker.className = 'axis-marker';
+                    marker.style.left = `${(i / maxAnos) * 100}%`;
+                    marker.textContent = `${i}a`;
+                    axis.appendChild(marker);
+                }
+                timelineChartContainer.appendChild(axis);
+
+                timelineData.forEach((item, index) => {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.position = 'relative';
+                    wrapper.style.zIndex = '1';
+                    const label = document.createElement('p');
+                    label.className = 'font-semibold mb-2 text-sm text-gray-700';
+                    label.textContent = item.label;
+                    wrapper.appendChild(label);
+                    
+                    const track = document.createElement('div');
+                    track.className = 'timeline-track';
+                    
+                    const bar = document.createElement('div');
+                    bar.className = 'timeline-bar';
+                    bar.style.width = `${(item.anos / maxAnos) * 100}%`;
+                    bar.style.animationDelay = `${index * 0.2}s`;
+                    bar.style.backgroundColor = item.color;
+                    if (item.barLabel) {
+                        bar.innerHTML = `<span>${item.barLabel}</span>`;
+                    }
+                    track.appendChild(bar);
+
+                    item.events.forEach((event, eventIndex) => {
+                        const eventMarker = document.createElement('div');
+                        eventMarker.className = 'event-marker';
+                        eventMarker.style.left = `${(event.ano / maxAnos) * 100}%`;
+                        eventMarker.style.backgroundColor = item.color;
+                        eventMarker.innerHTML = `${iconMap[event.label] || '?'}<span class="tooltip">${event.label}</span>`;
+                        eventMarker.style.animationDelay = `${1 + (eventIndex * 0.3) + (index * 0.2)}s`;
+                        track.appendChild(eventMarker);
+                    });
+                    
+                    wrapper.appendChild(track);
+                    timelineChartContainer.appendChild(wrapper);
+                });
+            }
+            
+            buildTimeline();
+        });
+    </script>
+
+</body>
+</html>

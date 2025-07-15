@@ -1,0 +1,198 @@
+/* --- Estilos Globais e Variáveis --- */
+:root {
+    --wk-dark-blue: #001f5a;
+    --wk-vibrant-blue: #0047bb;
+    --wk-light-blue: #e6f0ff;
+    --wk-text-primary: #001f5a;
+    --wk-text-secondary: #5a6a8a;
+    --bg-main: #f8f9fa;
+    --bg-panel: #ffffff;
+    --border-color: #dee2e6;
+    --layout-height: calc(100vh - 10rem); /* Altura da área principal (viewport - header - padding) */
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--wk-text-primary);
+    overflow: hidden; /* Previne scroll da página inteira */
+}
+
+/* --- Layout Principal --- */
+.main-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem; /* 24px */
+    height: var(--layout-height);
+}
+
+/* --- Cabeçalho Padrão --- */
+.page-header {
+    background: linear-gradient(90deg, var(--wk-dark-blue) 0%, var(--wk-vibrant-blue) 100%);
+    border-radius: 0.75rem; /* 12px */
+    padding: 1.5rem; /* 24px */
+    margin-bottom: 1.5rem; /* 24px */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.page-header h1 {
+    font-size: 2.25rem; /* text-4xl */
+    font-weight: 800; /* font-extrabold */
+}
+
+.page-header img {
+    height: 6rem; /* h-24 */
+}
+
+/* --- Sidebar Padrão (Hover-based) --- */
+aside#sidebar {
+    width: 288px; /* w-72, largura expandido */
+    flex-shrink: 0;
+    transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: width;
+    height: 100%;
+}
+
+aside#sidebar.collapsed {
+    width: 112px; /* w-28, largura recolhido */
+}
+
+aside#sidebar nav {
+    background-color: var(--bg-panel);
+    padding: 1rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 10px -2px rgb(0 0 0 / 0.08);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.logo-container {
+    margin-bottom: 1.5rem;
+    display: flex;
+    justify-content: center;
+    padding: 1rem 0;
+    transition: all 0.35s ease-in-out;
+    flex-shrink: 0;
+}
+
+.logo-container img {
+    height: 6rem; /* h-24 */
+    transition: height 0.35s ease-in-out;
+}
+
+aside#sidebar.collapsed .logo-container img {
+    height: 3.5rem; /* h-14 */
+}
+
+.nav-links-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-right: 4px; /* Espaço para scrollbar */
+}
+
+/* Estilização da barra de rolagem */
+.nav-links-container::-webkit-scrollbar { width: 4px; }
+.nav-links-container::-webkit-scrollbar-track { background: transparent; }
+.nav-links-container::-webkit-scrollbar-thumb { background-color: var(--border-color); border-radius: 2px; }
+.nav-links-container::-webkit-scrollbar-thumb:hover { background-color: var(--wk-text-secondary); }
+
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    color: var(--wk-text-secondary);
+    transition: all 0.3s ease-in-out;
+    border-left: 4px solid transparent;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.nav-link:hover {
+    background-color: var(--wk-light-blue);
+    color: var(--wk-vibrant-blue);
+}
+
+.nav-link.active {
+    color: var(--wk-vibrant-blue);
+    background-color: var(--wk-light-blue);
+    border-left-color: var(--wk-vibrant-blue);
+}
+
+.nav-link svg {
+    flex-shrink: 0;
+    width: 2rem;
+    height: 2rem;
+    margin-right: 1rem;
+    transition: margin 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link .link-text {
+    opacity: 1;
+    transition: opacity 0.2s 0.1s ease-in-out;
+}
+
+aside#sidebar.collapsed .nav-link {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+aside#sidebar.collapsed .nav-link svg {
+    margin-right: 0;
+}
+
+aside#sidebar.collapsed .nav-link .link-text {
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+}
+
+/* --- Conteúdo Principal --- */
+main {
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+}
+
+.main-content-panel {
+    background-color: var(--bg-panel);
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 10px -2px rgb(0 0 0 / 0.08);
+    height: 100%;
+    overflow-y: auto; /* Rolagem interna */
+}
+
+/* --- Animação de Entrada --- */
+.content-animation {
+    animation: fadeInUp 0.5s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

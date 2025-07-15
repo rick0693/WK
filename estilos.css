@@ -1,0 +1,113 @@
+/* estilos.css */
+
+/* --- Estilos Globais e Variáveis de Cor --- */
+:root {
+    --wk-dark-blue: #001f5a;
+    --wk-vibrant-blue: #0047bb;
+    --wk-light-blue: #e6f0ff;
+    --wk-text-primary: #001f5a;
+    --wk-text-secondary: #5a6a8a;
+    --bg-main: #f8f9fa;
+    --bg-panel: #ffffff;
+    --border-color: #dee2e6;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--bg-main);
+    color: var(--wk-text-primary);
+    overflow-x: hidden;
+}
+
+.card {
+    background-color: var(--bg-panel);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 31, 90, 0.08);
+    border: 1px solid var(--border-color);
+}
+
+/* --- Animação de Conteúdo --- */
+.content-animation {
+    animation: fadeInUp 0.6s ease-in-out;
+}
+
+@keyframes fadeInUp {
+    from { 
+        opacity: 0; 
+        transform: translateY(20px); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0); 
+    }
+}
+
+/* --- Estilos do Sidebar --- */
+aside {
+    width: 288px;
+    transition: width 0.3s ease-in-out;
+    will-change: width;
+}
+
+aside.collapsed {
+    width: 96px;
+}
+
+.logo-container {
+    transition: all 0.3s ease-in-out;
+    padding: 1rem;
+}
+
+aside.collapsed .logo-container {
+    padding: 0.5rem;
+}
+
+/* --- Estilos dos Links de Navegação (Sidebar) --- */
+.nav-link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 0.5rem;
+    color: var(--wk-text-secondary);
+    transition: all 0.3s ease-in-out;
+    border-left: 4px solid transparent;
+}
+
+.nav-link .link-text {
+    opacity: 1;
+    transition: opacity 0.2s 0.1s ease-in-out, width 0.2s 0.1s ease-in-out;
+    white-space: nowrap;
+    width: auto;
+    overflow: hidden;
+}
+
+aside.collapsed .nav-link {
+    justify-content: center;
+}
+
+aside.collapsed .nav-link .link-text {
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+}
+
+aside.collapsed .nav-link svg {
+    margin-right: 0;
+}
+
+/* --- Estilos de Navegação Ativa/Hover --- */
+.nav-link:hover {
+    background-color: var(--wk-light-blue);
+    color: var(--wk-vibrant-blue);
+}
+
+.nav-link.active {
+    color: var(--wk-vibrant-blue);
+    background-color: var(--wk-light-blue);
+    border-left-color: var(--wk-vibrant-blue);
+}
